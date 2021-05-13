@@ -1,15 +1,15 @@
 const express = require('express');
-const router = express.Router();
+const reviewsRouter = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-const Review = require('../../models/Reviews');
+const Review = require('../../models/Review');
 const User = require('../../models/User');
 const PizzaPlace = require('../../models/PizzaPlace');
 
 const validateReviewInput = require('../../validation/review')
 
-router.get('/PizzaPlace/:PizzaPlace_id', (req,res)=>{
+reviewsRouter.get('/PizzaPlace/:PizzaPlace_id', (req,res)=>{
     Review.find({PizzaPlace: req.params.PizzaPlace_id})
         .sort({date: -1})
         .then(reviews => {
@@ -21,7 +21,7 @@ router.get('/PizzaPlace/:PizzaPlace_id', (req,res)=>{
         
 });
 
-router.get('/user/:user_id', (req,res)=>{
+reviewsRouter.get('/user/:user_id', (req,res)=>{
     Review.find({user: req.params.user_id})
         .sort({date: -1})
         .then(reviews => res.json(reviews))
@@ -31,7 +31,7 @@ router.get('/user/:user_id', (req,res)=>{
     );
 });
 
-router.get('/:reviewId', (req,res)=>{
+reviewsRouter.get('/:reviewId', (req,res)=>{
     Review.findById(req.params.reviewId)
         .then(review => res.json(review))
         .catch(err=>
@@ -40,7 +40,7 @@ router.get('/:reviewId', (req,res)=>{
     );
 });
 
-router.post('/', 
+reviewsRouter.post('/', 
     passport.authenticate('jwt', {session: false}),
     (req,res)=> {
         const {errors, isValid} = validateReviewInput(req.body);
@@ -64,7 +64,7 @@ router.post('/',
         );
     });
 
-    router.patch('/:reviewId', passport.authenticate('jwt', {session:false}), (req,res)=>{
+    reviewsRouter.patch('/:reviewId', passport.authenticate('jwt', {session:false}), (req,res)=>{
         
         Review.findById(req.params.reviewId, function(err, review){
             if(!review){
@@ -85,7 +85,7 @@ router.post('/',
         });
     });
 
-    router.delete('/:reviewId', passport.authenticate('jwt', {session:false}), (req, res)=>{
+    reviewsRouter.delete('/:reviewId', passport.authenticate('jwt', {session:false}), (req, res)=>{
         Review.findById(req.params.reviewId, function(err, review){
             if (!review){
                 return res.status(400).json('We could not find that review');
@@ -103,4 +103,4 @@ router.post('/',
         });
     });
 
-    module.exports = router;
+    module.exports = reviewsRouter;

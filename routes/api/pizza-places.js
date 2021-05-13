@@ -1,12 +1,12 @@
 const express = require('express');
-const router = express.Router();
+const pizzaPlacesRouter = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
 const PizzaPlace = require('../../models/PizzaPlace');
 const validatePizzaPlaceInput = require('../../validation/pizza-place');
 
-router.get('/', (req,res)=>{
+pizzaPlacesRouter.get('/', (req,res)=>{
     PizzaPlace.find()
         .sort({date:-1})
         .then(pizzaPlace => res.json(pizzaPlace))
@@ -15,7 +15,7 @@ router.get('/', (req,res)=>{
 });
 
 
-router.get('/:pizzaPlaceId', (req,res)=> {
+pizzaPlacesRouter.get('/:pizzaPlaceId', (req,res)=> {
     PizzaPlace.findById(req.params.pizzaPlaceId)
         .then(pizzaPlace => res.json(pizzaPlace))
         .catch(err => 
@@ -23,7 +23,7 @@ router.get('/:pizzaPlaceId', (req,res)=> {
             );
 });
 
-router.post('/', 
+pizzaPlacesRouter.post('/', 
     passport.authenticate('jwt', {session:false}),
     (req,res)=>{
         const{errors, isValid} = validatePizzaPlaceInput(req.body);
@@ -42,7 +42,7 @@ router.post('/',
         newPizzaPlace.save().then(pizzaPlace => res.json(pizzaPlace), errors=>res.json(errors));
     });
 
-router.patch('/:pizzaPlaceId', passport.authenticate('jwt', {session:false}), (req,res)=>{
+pizzaPlacesRouter.patch('/:pizzaPlaceId', passport.authenticate('jwt', {session:false}), (req,res)=>{
     PizzaPlace.findById(req.params.pizzaPlaceId, function(err, pizzaPlace){
         if (!pizzaPlace){
             return res.status(400).json('We could not find that Pizza Place');
@@ -65,7 +65,7 @@ router.patch('/:pizzaPlaceId', passport.authenticate('jwt', {session:false}), (r
     });
 });
 
-router.delete('/:pizzaPlaceId', passport.authenticate('jwt', {session:false}), (req,res)=>{
+pizzaPlacesRouter.delete('/:pizzaPlaceId', passport.authenticate('jwt', {session:false}), (req,res)=>{
    PizzaPlace.findById(req.params.pizzaPlaceId, function(err, pizzaPlace){
        if(!pizzaPlace){
            return res.status(400).json('We could not find that Pizza Place');
@@ -82,4 +82,4 @@ router.delete('/:pizzaPlaceId', passport.authenticate('jwt', {session:false}), (
    });
 });
 
-module.exports = router;
+module.exports = pizzaPlacesRouter;

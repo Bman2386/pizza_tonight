@@ -1,15 +1,27 @@
+
+// import express from 'express';
+// import {Router} from 'express';
+// import bcrypt from 'bcrypt';
+// import jwt from 'jsonwebtoken';
+// import keys from '../../config/keys';
+// import passport from 'passport';
+// import User from '../../models/User';
 const express = require('express');
-const router = express.Router();
+// const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
 
+
+const usersRouter = express.Router();
+
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 
-router.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
+
+usersRouter.get('/current', passport.authenticate('jwt', {session: false}), (req, res) => {
     res.json({
         id: req.user.id,
         email: req.user.email,
@@ -19,7 +31,7 @@ router.get('/current', passport.authenticate('jwt', {session: false}), (req, res
     });
   })
 
-router.get('/', (req,res)=>{
+usersRouter.get('/', (req,res)=>{
     User.find()
         .sort({id:-1})
         .then(users => {
@@ -35,7 +47,7 @@ router.get('/', (req,res)=>{
 });
 
 
-router.get('/:id', (req, res)=> {
+usersRouter.get('/:id', (req, res)=> {
     User.findById(req.params.id)
         .then(user => {
             const payload = {
@@ -49,7 +61,7 @@ router.get('/:id', (req, res)=> {
             );
 });
 
-router.post('/register', (req,res)=> {
+usersRouter.post('/register', (req,res)=> {
     const { errors, isValid } = validateRegisterInput(req.body);
 
     if (!isValid) {
@@ -87,7 +99,7 @@ router.post('/register', (req,res)=> {
     })
 })
 
-router.post('/login', (req, res) => {
+usersRouter.post('/login', (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
 
     if (!isValid) {
@@ -127,7 +139,7 @@ router.post('/login', (req, res) => {
       })
   })
 
-  router.patch('/:userId', passport.authenticate('jwt', {session:false}), (req,res)=>{
+  usersRouter.patch('/:userId', passport.authenticate('jwt', {session:false}), (req,res)=>{
         
     User.findById(req.params.userId, function(err, user){
         if(!user){
@@ -148,4 +160,4 @@ router.post('/login', (req, res) => {
     });
 });
 
-module.exports = router;
+module.exports =  usersRouter;
