@@ -11,6 +11,8 @@ const users = require('../routes/api/users');
 const reviews = require('../routes/api/reviews');
 const pizzaPlaces = require('../routes/api/pizza-places');
 
+//Type Script is new to me, I apologize that the way I wrote it may be odd. I just dove in feet 1st to finish this ASAP
+
 class CodingChallenge {
   private port = process.env.PORT;
   public app: express.Application;
