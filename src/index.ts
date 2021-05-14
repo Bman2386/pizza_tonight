@@ -11,6 +11,8 @@ const users = require('../routes/api/users');
 const reviews = require('../routes/api/reviews');
 const pizzaPlaces = require('../routes/api/pizza-places');
 
+//Type Script is new to me, I apologize that the way I wrote it may be odd. I just dove in feet 1st to finish this ASAP
+
 class CodingChallenge {
   private port = process.env.PORT;
   public app: express.Application;
@@ -24,6 +26,7 @@ class CodingChallenge {
   }
 
   public start(): void {
+    
     this.app.listen(this.port, () =>
       console.log(`Example app listening on port ${this.port}!`)
     );
@@ -31,6 +34,7 @@ class CodingChallenge {
 require('../config/passport')(passport);
   }
   public routes(): void {
+    
     const routes = Router();
     this.app.get('/', (req, res) => {
       res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
@@ -42,6 +46,7 @@ require('../config/passport')(passport);
   }
 
   public config() {
+    this.app.use(express.static('frontend/build'));
     this.app.set("port", this.port);
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
