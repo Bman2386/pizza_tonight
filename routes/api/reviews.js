@@ -9,13 +9,13 @@ const PizzaPlace = require('../../models/PizzaPlace');
 
 const validateReviewInput = require('../../validation/review')
 
-reviewsRouter.get('/PizzaPlace/:PizzaPlace_id', (req,res)=>{
-    Review.find({PizzaPlace: req.params.PizzaPlace_id})
+reviewsRouter.get('/', (req,res)=>{
+    Review.find()
         .sort({date: -1})
         .then(reviews => {
             return res.json(reviews)})
         .catch(err => 
-            res.status(404).json({PizzaPlaceNotFound: 'No PizzaPlace found with that ID'}
+            res.status(404).json({reviewnotfound: 'No reviews found, create some'}
             )
         );
         
